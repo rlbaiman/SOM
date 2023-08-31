@@ -2,7 +2,7 @@ library(kohonen)
 library(MASS)
 
 ###Read in the csv file for matrix from SOM_make_matrix.R. Each row should be a timestep of data 
-file<-read.csv('SOM_example_data.csv',stringsAsFactors = FALSE)
+file<-read.csv('example_data/SOM_example_data.csv',stringsAsFactors = FALSE)
 matrix<-as.matrix(file)
 rm(file)
 
@@ -12,7 +12,7 @@ rm(file)
 dimx=4
 dimy=4 
 radius=4
-iterations=500
+iterations=300
 alpha_start=.05
 alpha_end=0
 
@@ -38,8 +38,8 @@ plot(sammon$points, type='n')
 text(sammon$points, labels=as.character(1:nrow(codes)))
 
 ## save some stuff
-write.csv(nodes,'nodes')
-write.csv(node_assignment,'node_assignments')
+write.csv(nodes,'example_data/example_nodes.csv')
+write.csv(node_assignment,'example_data/example_node_assignments.csv')
 
 
 
