@@ -1,29 +1,14 @@
-library(maps)
-library(mapdata)
-library(maps)
-library(mapdata)
-library(ggplot2)
-library(raster) 
-library(rgdal) 
-library(ncdf4)
 library(kohonen)
-library(RColorBrewer)
-library(RCurl)
-library(lattice)
 library(MASS)
-library("ape")
 
 ###Read in the csv file for matrix from SOM_make_matrix.R. Each row should be a timestep of data 
-file<-read.csv('SOM_Resources/latadjust_Anom_SOM_matrix.csv',stringsAsFactors = FALSE)
-matrix2<-as.matrix(file)
-matrix<-matrix2[1:nrow(matrix2),2:ncol(matrix2)] # remove extra column
+file<-read.csv('SOM_example_data.csv',stringsAsFactors = FALSE)
+matrix<-as.matrix(file)
 rm(file)
-rm(matrix2)
 
 ##################################################
 #Step by step run of SOM function
 #############################################################################
-#SOM_function(matrix,1,4,4,5,500,.05,0)
 dimx=4
 dimy=4 
 radius=4
@@ -37,23 +22,62 @@ som_model<- som(matrix, grid=som_grid, radius=radius ,rlen=iterations, alpha=c(a
 
 nodes<-getCodes(som_model)
 
-write.csv(nodes,'out_path')
-
 node_assignment<-som_model$unit.classif 
 
-write.csv(node_assignment,'Ice sheets & Climate Dropbox/Becca Baiman/Fall_2021/SOM_testing_again/node_assignment')
-
 predictions<-predict(som_model, newdata=matrix)
-predictions2<-predict(som_model)
 
+
+plot(som_model, type = "changes")
 plot(som_model, type='dist.neighbours')
 plot(som_model, 'mapping')
-#################################################################################
 
-###Function that runs SOM and outputs everything we want###
+#Sammon mapping
+codes<-getCodes(som_model, idx=1)
+sammon<-sammon(dist(nodes))
+plot(sammon$points, type='n')
+text(sammon$points, labels=as.character(1:nrow(codes)))
+
+## save some stuff
+write.csv(nodes,'nodes')
+write.csv(node_assignment,'node_assignments')
+
+
+
+
+
+
+
+
+
+
+
+
+###############################################################################
+# some other stuff that I messed with for testing different input parameters
+
+#################################################################################
+library(maps)
+library(mapdata)
+library(maps)
+library(mapdata)
+library(ggplot2)
+library(raster) 
+library(rgdal) 
+library(ncdf4)
+
+library(RColorBrewer)
+library(RCurl)
+library(lattice)
+
+library("ape")
+
+
+
+###Function that runs SOM and outputs everything we want for testing###
 SOM_function<-function(matrix, test_num, dimx, dimy, radius, iterations,alpha_start, alpha_end){
   
   timestart<-Sys.time()
+  
   #Create the SOM grid dimensions that you want
   som_grid<-somgrid(xdim=dimx, ydim=dimy, topo='rectangular', neighbourhood.fct = 'gaussian')
   
@@ -62,10 +86,10 @@ SOM_function<-function(matrix, test_num, dimx, dimy, radius, iterations,alpha_st
   
   name=paste0('Nodes_test',test_num,'.csv')
   nodes<-getCodes(som_model)
-  write.csv(nodes,paste('Ice sheets & Climate Dropbox/Becca Baiman/Fall2021/SOM_testing_again/',name))
+  write.csv(nodes,paste(name))
   
   ## RMSD
-  RMSD<-mean(sqrt(som_model6$distances/(11773)))
+  RMSD<-mean(sqrt(som_model$distances/(11773)))
   
   ##MAD
   node_assignment<-som_model$unit.classif 
