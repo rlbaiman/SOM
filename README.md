@@ -7,4 +7,4 @@ Self Organizing Map Resources
 
 These resources can be used to perform SOM analysis on any spatial data with multiple timesteps and a list of variable values. If you are using spatial data, you will need to convert a .nc file to a .csv file similar to SOM_example_data.csv where each row is a timestep and the columns are flattened spatial data.
 
-Please email rebecca.baiman@colorado.edu with any questions!
+Please email rebecca.baiman@colorado.edu with any questions! Please see https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022JD037859 for the paper published based using this analysis. 
